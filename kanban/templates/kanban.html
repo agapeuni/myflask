@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Kanban</title>
+<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css">
+<script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<div class="container">
+		<div class="jumbotron">
+			<h2>Kanban Project</h2>
+			<h4>with Python Flask</h4>
+			<form action="{{ url_for('kanban.create') }}" method="post">					
+				<div class="row g-3">
+					<div class="col-sm-8">
+						<input type="text" name="contents" class="form-control" required> 
+					</div>		
+					<div class="col-sm-2">
+						<input type="range" name="priority" class="form-control" min="1" max="3" value="1" />
+					</div>
+					<div class="col-sm-2">
+						<button type="submit" class="btn btn-success">Add Task</button>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="row">
+			<div class="col-lg-3">
+				<ul class="list-group">
+					<li class="list-group-item active">PLAN<span class="badge">Total : {{ planTasks | length }}</span></li> 
+                    {% for task in planTasks %}
+					<div class="input-group">
+						<li class="list-group-item">{{ task.contents }}<span class="badge">{{ task.priority }}</span></li>
+						<div class="input-group-btn">
+							<form action="{{ url_for('kanban.modify', task_id=task.id) }}" method="post">
+								<input type="hidden" name="status" value="TO-DO">
+								<button type="submit" name="contents" value="{{ task.contents }}" class="btn btn-info">
+									<strong>>></strong>
+								</button>
+							</form>
+						</div>
+					</div>
+					{% endfor %}
+				</ul>
+			</div>
+			<div class="col-lg-3">
+				<ul class="list-group">
+					<li class="list-group-item active">TO-DO<span class="badge">Total : {{ todoTasks | length }}</span></li> 
+                    {% for task in todoTasks %}
+					<div class="input-group">
+						<li class="list-group-item">{{ task.contents }}<span class="badge">{{ task.priority }}</span></li>
+						<div class="input-group-btn">
+							<form action="{{ url_for('kanban.modify', task_id=task.id) }}" method="post">
+								<input type="hidden" name="status" value="In-Progress">
+								<button type="submit" name="contents" value="{{ task.contents }}" class="btn btn-info">
+									<strong>>></strong>
+								</button>
+							</form>
+						</div>
+					</div>
+					{% endfor %}
+				</ul>
+			</div>
+			<div class="col-lg-3">
+				<ul class="list-group">
+					<li class="list-group-item active">In-Progress<span class="badge">Total : {{ inPrTasks | length }}</span></li> 
+                    {% for task in inPrTasks %}
+					<div class="input-group">
+						<li class="list-group-item">{{ task.contents }}<span class="badge">{{ task.priority }}</span></li>
+						<div class="input-group-btn">
+							<form action="{{ url_for('kanban.modify', task_id=task.id) }}" method="post">
+								<input type="hidden" name="status" value="Done">
+								<button type="submit" name="contents" value="{{ task.contents }}" class="btn btn-info">
+									<strong>>></strong>
+								</button>
+							</form>
+						</div>
+					</div>
+					{% endfor %}
+				</ul>
+			</div>
+			<div class="col-lg-3">
+				<ul class="list-group">
+					<li class="list-group-item active">Done<span class="badge">Total : {{ doneTasks | length }}</span></li> 
+                    {% for task in doneTasks %}
+					<div class="input-group">
+						<li class="list-group-item">{{ task.contents }}<span class="badge">{{ task.priority }}</span></li>
+						<div class="input-group-btn">
+							<form action="{{ url_for('kanban.remove', task_id=task.id) }}" method="post">
+								<button type="submit" name="contents" value="{{ task.contents }}" class="btn btn-danger">Del</button>
+							</form>
+						</div>
+					</div>
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
